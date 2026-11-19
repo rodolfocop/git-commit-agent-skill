@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Lint a Git commit message for Conventional Commits + iuricode/padroes-de-commits rules.
 Usage:
-  python3 check_commit_msg.py [--require-emoji] MSGFILE
-  python3 check_commit_msg.py [--require-emoji] -   # read stdin
+  python3 check_commit_msg.py [--require-emoji | --forbid-emoji] MSGFILE
+  python3 check_commit_msg.py [--require-emoji | --forbid-emoji] -   # read stdin
 Exit: 0 if no HIGH findings, 1 if HIGH, 2 usage/IO error.
 MEDIUM and LOW do not fail the process. Exit 0 is not a clean bill of health.
 Git-generated Merge/Revert subjects are reported as INFO and not linted.
@@ -84,7 +84,12 @@ def _visible_lines(text: str) -> list[tuple[int, str]]:
     return entries
 
 
-def lint(text: str, *, require_emoji: bool = False) -> list[tuple[str, str, str]]:
+def lint(
+    text: str,
+    *,
+    require_emoji: bool = False,
+    forbid_emoji: bool = False,
+) -> list[tuple[str, str, str]]:
     entries = _visible_lines(text)
     findings: list[tuple[str, str, str]] = []
     if not entries or not entries[0][1].strip():
@@ -108,7 +113,12 @@ def lint(text: str, *, require_emoji: bool = False) -> list[tuple[str, str, str]
             "MEDIUM", "emoji-space",
             "Insert a space between the leading emoji and type (`✨ feat: ...`)",
         ))
-    if require_emoji and emoji is None:
+    if forbid_emoji and emoji is not None:
+        findings.append((
+            "MEDIUM", "emoji-unexpected",
+            "Omit leading emoji when emoji mode is inactive",
+        ))
+    elif require_emoji and emoji is None:
         findings.append((
             "LOW", "emoji-missing",
             "Consider adding a leading emoji (e.g. `✨` or `:sparkles:`) per iuricode/padroes-de-commits",
@@ -189,16 +199,19 @@ def lint(text: str, *, require_emoji: bool = False) -> list[tuple[str, str, str]
 
 def main(argv: list[str]) -> int:
     require_emoji = False
+    forbid_emoji = False
     positional: list[str] = []
     for arg in argv:
         if arg == "--require-emoji":
             require_emoji = True
+        elif arg == "--forbid-emoji":
+            forbid_emoji = True
         elif arg.startswith("-") and arg != "-":
             print(__doc__, file=sys.stderr)
             return 2
         else:
             positional.append(arg)
-    if len(positional) != 1:
+    if (require_emoji and forbid_emoji) or len(positional) != 1:
         print(__doc__, file=sys.stderr)
         return 2
     target = positional[0]
@@ -211,7 +224,7 @@ def main(argv: list[str]) -> int:
     except OSError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
-    findings = lint(text, require_emoji=require_emoji)
+    findings = lint(text, require_emoji=require_emoji, forbid_emoji=forbid_emoji)
     for sev, rid, msg in findings:
         print(f"[{sev}] {rid}: {msg}")
     counts = {s: sum(1 for f in findings if f[0] == s) for s in ("HIGH", "MEDIUM", "LOW", "INFO")}

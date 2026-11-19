@@ -10,9 +10,9 @@ Format:
 ```
 
 Examples:
-- `✨ feat(auth): add login page`
+- `feat(auth): add login page` (default, emoji mode inactive)
+- `✨ feat(auth): add login page` (with `--emoji` or `git config gcas.emoji true`)
 - `:bug: fix(api)!: handle empty payload without panic`
-- `docs(readme): update install command` (emoji is recommended, optional if repo rules omit emojis)
 
 ## Supported types
 

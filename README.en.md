@@ -3,6 +3,7 @@
   <h1>GitCommitAgentSkill</h1>
   <p><strong>AI agent skill for creating and linting semantic Git commits</strong></p>
   <p>
+    <img src="https://img.shields.io/badge/release-v1.1.0-0ea5e9" alt="Release v1.1.0" />
     <img src="https://img.shields.io/badge/skill-gcas-blue" alt="Skill gcas" />
     <img src="https://img.shields.io/badge/standard-Conventional%20Commits%20%2B%20Emojis-purple" alt="Standard" />
     <img src="https://img.shields.io/badge/agents-Codex%20%C2%B7%20Claude%20Code%20%C2%B7%20Antigravity%20%C2%B7%20Cursor-teal" alt="Agents" />
@@ -44,6 +45,9 @@ npx skills add rodolfocop/git-commit-agent-skill --agent claude-code
 
 # Install globally (available across all your projects)
 npx skills add rodolfocop/git-commit-agent-skill -g
+
+# Update to the latest version (for existing installs)
+npx skills update
 ```
 
 > **Prerequisites:** `python3` and `git` on `PATH` (no third-party Python packages required).
@@ -69,24 +73,47 @@ cp -R SKILL.md README.md README.en.md references templates examples scripts .age
 ### In Codex (`$gcas`)
 
 ```text
+# Default (no emoji)
 $gcas "Write a commit message for my staged changes."
-$gcas "What should I name this commit?"
-$gcas "Check my commit message: Fixed the login bug."
-$gcas "Help me commit this: added a toggle for dark mode in settings."
-$gcas "Is 'update stuff' a good commit message?"
 $gcas "Commit the implemented changes split by logical context."
+
+# One-off with emoji (--emoji)
+$gcas --emoji "Commit the implemented changes."
+$gcas --emoji "Help me commit this: added a toggle for dark mode in settings."
+
+# Message review
+$gcas "Check my commit message: Fixed the login bug."
+$gcas "Is 'update stuff' a good commit message?"
 ```
 
 ### In Claude Code, Antigravity, and others (`/gcas`)
 
 ```text
+# Default (no emoji)
 /gcas Write a commit message for my staged changes.
-/gcas What should I name this commit?
-/gcas Check my commit message: Fixed the login bug.
-/gcas Help me commit this: added a toggle for dark mode in settings.
-/gcas Is "update stuff" a good commit message?
 /gcas Commit the implemented changes split by logical context.
+
+# One-off with emoji (--emoji)
+/gcas --emoji Commit the implemented changes.
+/gcas --emoji Help me commit this: added a toggle for dark mode in settings.
+
+# Message review
+/gcas Check my commit message: Fixed the login bug.
+/gcas Is "update stuff" a good commit message?
 ```
+
+### Emoji Mode (`--emoji` & Active/Inactive Toggle)
+
+By default, commits are generated **without an emoji** (`feat(auth): add login`). You can control this in two ways:
+
+| Mode | Prompt command | Git equivalent | Behavior |
+|---|---|---|---|
+| **One-off (active)** | `/gcas --emoji ...` or `$gcas --emoji ...` | — | Includes an emoji **for this command only** |
+| **One-off (inactive)** | `/gcas --no-emoji ...` or `$gcas --no-emoji ...` | — | Omits emoji **for this command only** (overrides persistent mode) |
+| **Always active (repo)** | `/gcas --emoji-on` | `git config gcas.emoji true` | Keeps emoji **active** for all commits in this repository |
+| **Always active (global)** | `/gcas --emoji-on global` | `git config --global gcas.emoji true` | Keeps emoji **active** across all your repositories |
+| **Deactivate (inactive)** | `/gcas --emoji-off` | `git config gcas.emoji false` | Switches back to **inactive** (no emoji by default) |
+| **Check status** | `/gcas --emoji-status` | `git config --show-origin --get gcas.emoji` | Shows whether emoji mode is currently active or inactive |
 
 > [!NOTE]
 > When you ask only for a **suggestion or review** (*"Write a commit message..."*, *"Check my commit message..."*), the agent inspects the repository/message and returns a validated recommendation without altering your Git history. When you ask it to **commit/confirm** (*"Commit the implemented changes..."*, *"Help me commit this..."*), it stages the right files with `git add`, validates with the linter, and runs `git commit`.

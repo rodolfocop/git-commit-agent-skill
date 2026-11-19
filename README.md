@@ -3,6 +3,7 @@
   <h1>GitCommitAgentSkill</h1>
   <p><strong>Skill para agentes de IA criarem e validarem commits semânticos no Git</strong></p>
   <p>
+    <img src="https://img.shields.io/badge/release-v1.1.0-0ea5e9" alt="Release v1.1.0" />
     <img src="https://img.shields.io/badge/skill-gcas-blue" alt="Skill gcas" />
     <img src="https://img.shields.io/badge/padr%C3%A3o-Conventional%20Commits%20%2B%20Emojis-purple" alt="Padrão" />
     <img src="https://img.shields.io/badge/agentes-Codex%20%C2%B7%20Claude%20Code%20%C2%B7%20Antigravity%20%C2%B7%20Cursor-teal" alt="Agentes" />
@@ -44,6 +45,9 @@ npx skills add rodolfocop/git-commit-agent-skill --agent claude-code
 
 # Instalação global (para todos os seus projetos)
 npx skills add rodolfocop/git-commit-agent-skill -g
+
+# Atualizar para a versão mais recente (quem já instalou)
+npx skills update
 ```
 
 > **Pré-requisitos:** `python3` e `git` disponíveis no `PATH` (nenhuma dependência Python externa é necessária).
@@ -69,24 +73,47 @@ cp -R SKILL.md README.md README.en.md references templates examples scripts .age
 ### No Codex (`$gcas`)
 
 ```text
+# Padrão (sem emoji)
 $gcas "Escreva uma mensagem de commit para minhas alterações preparadas."
-$gcas "Qual o nome que devo dar a este commit?"
-$gcas "Confira minha mensagem de commit: Fixed the login bug."
-$gcas "Me ajude a commitar isso: adicionei uma opção para ativar/desativar o modo escuro nas configurações."
-$gcas "É 'update stuff' uma boa mensagem de commit?"
 $gcas "Commite as alterações implementadas separando por contexto lógico."
+
+# Com emoji pontual (--emoji)
+$gcas --emoji "Commite as alterações implementadas."
+$gcas --emoji "Me ajude a commitar isso: adicionei modo escuro nas configurações."
+
+# Revisão de mensagens
+$gcas "Confira minha mensagem de commit: Fixed the login bug."
+$gcas "É 'update stuff' uma boa mensagem de commit?"
 ```
 
 ### No Claude Code, Antigravity e outros (`/gcas`)
 
 ```text
+# Padrão (sem emoji)
 /gcas Escreva uma mensagem de commit para minhas alterações preparadas.
-/gcas Qual o nome que devo dar a este commit?
-/gcas Confira minha mensagem de commit: Fixed the login bug.
-/gcas Me ajude a commitar isso: adicionei uma opção para ativar/desativar o modo escuro nas configurações.
-/gcas "update stuff" é uma boa mensagem de commit?
 /gcas Commite as alterações implementadas separando por contexto lógico.
+
+# Com emoji pontual (--emoji)
+/gcas --emoji Commite as alterações implementadas.
+/gcas --emoji Me ajude a commitar isso: adicionei modo escuro nas configurações.
+
+# Revisão de mensagens
+/gcas Confira minha mensagem de commit: Fixed the login bug.
+/gcas "update stuff" é uma boa mensagem de commit?
 ```
+
+### Modo Emoji (`--emoji` e Ativo/Inativo)
+
+Por padrão, os commits são gerados **sem emoji** (`feat(auth): adicionar login`). Você pode controlar isso de duas formas:
+
+| Modo | Comando no prompt | Equivalente no Git | Comportamento |
+|---|---|---|---|
+| **Pontual (ativo)** | `/gcas --emoji ...` ou `$gcas --emoji ...` | — | Aplica emoji **apenas neste comando** |
+| **Pontual (inativo)** | `/gcas --no-emoji ...` ou `$gcas --no-emoji ...` | — | Remove emoji **apenas neste comando** (útil se o modo fixo estiver ativo) |
+| **Sempre ativo (repo)** | `/gcas --emoji-on` | `git config gcas.emoji true` | Deixa emoji **ativo** para todos os commits deste repositório |
+| **Sempre ativo (global)** | `/gcas --emoji-on global` | `git config --global gcas.emoji true` | Deixa emoji **ativo** em todos os seus repositórios |
+| **Desativar (inativo)** | `/gcas --emoji-off` | `git config gcas.emoji false` | Volta para **inativo** (sem emoji por padrão) |
+| **Consultar status** | `/gcas --emoji-status` | `git config --show-origin --get gcas.emoji` | Mostra se o modo emoji está ativo ou inativo |
 
 > [!NOTE]
 > Quando você pede apenas uma **sugestão ou revisão** (*"Escreva uma mensagem..."*, *"Confira minha mensagem..."*), o agente analisa o repositório/mensagem e retorna a recomendação validada sem alterar seu histórico. Quando você pede para **commitar/confirmar** (*"Commite as alterações..."*, *"Me ajude a commitar isso..."*), ele organiza o `git add`, valida com o linter e executa o `git commit`.

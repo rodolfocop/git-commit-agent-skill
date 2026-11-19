@@ -19,8 +19,8 @@ mod = _load()
 lint = mod.lint
 
 
-def ids(text: str, *, require_emoji: bool = False) -> set[str]:
-    return {rid for _, rid, _ in lint(text, require_emoji=require_emoji)}
+def ids(text: str, *, require_emoji: bool = False, forbid_emoji: bool = False) -> set[str]:
+    return {rid for _, rid, _ in lint(text, require_emoji=require_emoji, forbid_emoji=forbid_emoji)}
 
 
 class LintTests(unittest.TestCase):
@@ -55,6 +55,11 @@ class LintTests(unittest.TestCase):
         self.assertNotIn("emoji-missing", ids("feat: add login\n", require_emoji=False))
         self.assertIn("emoji-missing", ids("feat: add login\n", require_emoji=True))
         self.assertNotIn("emoji-missing", ids("✨ feat: add login\n", require_emoji=True))
+
+    def test_forbid_emoji_flag(self):
+        self.assertNotIn("emoji-unexpected", ids("feat: add login\n", forbid_emoji=True))
+        self.assertIn("emoji-unexpected", ids("✨ feat: add login\n", forbid_emoji=True))
+        self.assertIn("emoji-unexpected", ids(":sparkles: feat: add login\n", forbid_emoji=True))
 
     def test_non_ascii_word_is_not_treated_as_emoji(self):
         self.assertIn("type-missing", ids("ação: ajustar layout\n"))
