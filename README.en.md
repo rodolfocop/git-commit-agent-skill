@@ -1,13 +1,17 @@
-# git-commit-agent-skill
+<div align="center">
+  <img src="assets/logo.png" alt="GitCommitAgentSkill" width="150" />
+  <h1>GitCommitAgentSkill</h1>
+  <p><strong>AI agent skill for creating and linting semantic Git commits</strong></p>
+  <p>
+    <img src="https://img.shields.io/badge/skill-gcas-blue" alt="Skill gcas" />
+    <img src="https://img.shields.io/badge/standard-Conventional%20Commits%20%2B%20Emojis-purple" alt="Standard" />
+    <img src="https://img.shields.io/badge/agents-Codex%20%C2%B7%20Claude%20Code%20%C2%B7%20Antigravity%20%C2%B7%20Cursor-teal" alt="Agents" />
+    <img src="https://img.shields.io/badge/python-3%2B-brightgreen" alt="Python 3+" />
+  </p>
+  <p><a href="README.md">🇧🇷 Português</a> | <strong>🇺🇸 English</strong></p>
+</div>
 
 AI agent skill that analyzes implemented changes, organizes atomic commits, and writes, lints, or executes **Conventional Commits + Semantic Emoji** messages — automatically yielding to a repository's own `commitlint` config, hooks, or classic `50/72` style when documented.
-
-![Skill](https://img.shields.io/badge/skill-gcas-blue)
-![Standard](https://img.shields.io/badge/standard-Conventional%20Commits%20%2B%20Emojis-purple)
-![Agents](https://img.shields.io/badge/agents-Codex%20%C2%B7%20Claude%20Code%20%C2%B7%20Antigravity%20%C2%B7%20Cursor-teal)
-![Python](https://img.shields.io/badge/python-3%2B-brightgreen)
-
-[🇧🇷 Português](README.md) | **🇺🇸 English**
 
 ---
 
@@ -153,6 +157,7 @@ python3 scripts/test_check_commit_msg.py
 | Path | Role |
 |---|---|
 | `SKILL.md` | Agent instructions for `gcas` (commit + review workflows) |
+| `assets/logo.png` | Official project logo (`1:1`) |
 | `scripts/check_commit_msg.py` | Heuristic linter supporting emojis and all 16 commit types |
 | `scripts/test_check_commit_msg.py` | Unit tests for the linter |
 | `references/conventional-commits.md` | Commit format, 16 types, scopes, breaking changes, body & footers |

@@ -1,13 +1,17 @@
-# git-commit-agent-skill
+<div align="center">
+  <img src="assets/logo.png" alt="GitCommitAgentSkill" width="150" />
+  <h1>GitCommitAgentSkill</h1>
+  <p><strong>Skill para agentes de IA criarem e validarem commits semânticos no Git</strong></p>
+  <p>
+    <img src="https://img.shields.io/badge/skill-gcas-blue" alt="Skill gcas" />
+    <img src="https://img.shields.io/badge/padr%C3%A3o-Conventional%20Commits%20%2B%20Emojis-purple" alt="Padrão" />
+    <img src="https://img.shields.io/badge/agentes-Codex%20%C2%B7%20Claude%20Code%20%C2%B7%20Antigravity%20%C2%B7%20Cursor-teal" alt="Agentes" />
+    <img src="https://img.shields.io/badge/python-3%2B-brightgreen" alt="Python 3+" />
+  </p>
+  <p><strong>🇧🇷 Português</strong> | <a href="README.en.md">🇺🇸 English</a></p>
+</div>
 
 Skill para agentes de IA que analisa alterações implementadas, organiza commits atômicos e escreve, valida ou executa mensagens no padrão **Conventional Commits + Emojis Semânticos** — respeitando automaticamente as convenções de `commitlint`, hooks ou estilo clássico `50/72` quando o repositório já possuir regras próprias.
-
-![Skill](https://img.shields.io/badge/skill-gcas-blue)
-![Padrão](https://img.shields.io/badge/padr%C3%A3o-Conventional%20Commits%20%2B%20Emojis-purple)
-![Agentes](https://img.shields.io/badge/agentes-Codex%20%C2%B7%20Claude%20Code%20%C2%B7%20Antigravity%20%C2%B7%20Cursor-teal)
-![Python](https://img.shields.io/badge/python-3%2B-brightgreen)
-
-**🇧🇷 Português** | [🇺🇸 English](README.en.md)
 
 ---
 
@@ -153,6 +157,7 @@ python3 scripts/test_check_commit_msg.py
 | Caminho | Função |
 |---|---|
 | `SKILL.md` | Instruções da skill `gcas` para os agentes (fluxo de commit + revisão) |
+| `assets/logo.png` | Logo oficial do projeto (`1:1`) |
 | `scripts/check_commit_msg.py` | Linter heurístico com suporte a emojis e aos 16 tipos |
 | `scripts/test_check_commit_msg.py` | Testes unitários do linter |
 | `references/conventional-commits.md` | Estrutura do commit, 16 tipos, escopos, breaking changes, corpo e rodapé |
